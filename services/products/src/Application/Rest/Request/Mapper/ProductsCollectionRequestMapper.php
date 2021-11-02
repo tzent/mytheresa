@@ -39,6 +39,8 @@ final class ProductsCollectionRequestMapper extends AbstractRequestMapper implem
         $category      = $request->get('category');
         $priceLessThan = $request->get('price_less_than');
 
+        //ToDo check for not allowed query params and throw an exception
+
         $request = new ProductsCollectionRequest(
             limit: ProductsCollectionRequestMapperInterface::RESULTS_LIMIT,
             category: null !== $category ? trim($category) : null,
