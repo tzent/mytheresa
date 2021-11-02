@@ -1,0 +1,3 @@
+#index:
+#    path: /
+#    controller: MT\Controller\DefaultController::index

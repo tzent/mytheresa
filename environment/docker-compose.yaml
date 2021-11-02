@@ -1,0 +1,48 @@
+version: '3.7'
+
+networks:
+  mytheresa-net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.5.0.0/16
+
+services:
+  #######################################
+  # Products service
+  #######################################
+  products-gateway:
+    build:
+      context: ../
+      dockerfile: environment/nginx/Dockerfile
+      args:
+        SERVICE: products
+    container_name: products-gateway
+    restart: on-failure
+    volumes:
+      - ../services/products:/var/www/html
+    networks:
+      mytheresa-net:
+        ipv4_address: 10.5.0.100
+    ports:
+      - "443:443"
+    links:
+      - products-service
+  products-service:
+    build:
+      context: ../
+      dockerfile: environment/php/fpm/Dockerfile
+      args:
+        SERVICE: products
+    container_name: products-service
+    restart: on-failure
+    volumes:
+      - ../services/products:/var/www/html
+    environment:
+      APP_ENV: $APP_ENV
+    networks:
+      mytheresa-net:
+        ipv4_address: 10.5.0.101
+    expose:
+      - 9000
+      - 9013 #xdebug
